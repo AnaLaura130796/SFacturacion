@@ -1,0 +1,2 @@
+C:\Users\PMM\Desktop\sistemas\facturacion_excel\archivo_entrada.xlsx
+C:\Users\PMM\Desktop\sistemas\facturacion_excel\archivo_salida.xlsx
