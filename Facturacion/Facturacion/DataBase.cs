@@ -13,9 +13,7 @@ namespace Facturacion
         static public OleDbConnection _conexionFacturacion = null;
 
         public static void getStringConnectionFacturaciones()
-        {
-            string[] lines = System.IO.File.ReadAllLines(@"" + System.Windows.Forms.Application.StartupPath + "\\pathFacturaciones.txt");
-            string pathBaseDeDatos = lines[0];
+        {            
             stringConnectionFacturaciones = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + pathBaseDeDatos + "; Extended Properties='Excel 8.0;HDR=NO';"; 
         }
 
@@ -79,5 +77,8 @@ namespace Facturacion
             MessageBox.Show(ex.ToString());
             MessageBox.Show("Es posible que la base de datos de Especificaciones no este disponible");
         }
+
+        public static string pathBaseDeDatos { get; set; }
+        
     }
 }

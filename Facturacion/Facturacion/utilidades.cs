@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
+
 namespace Facturacion
 {
 
@@ -23,16 +24,17 @@ namespace Facturacion
             MessageBoxIcon.Error,
             MessageBoxDefaultButton.Button1);
         }
-        internal static void exportarTablaExcel(DataTable tabla)
+        internal static void exportarTablaExcel(DataTable tabla, string encabezado)
         {
+
             try
             {
-                if (tabla == null)
-                {
-                    utilidades.mostrarMensajeValidacion("No se encontró información en la tabla para exportación. Contacta a Aseguramiento de calidad.");
-                }
-                else
-                {
+              
+                    if (tabla == null)
+                    {
+                        utilidades.mostrarMensajeValidacion("No se encontró información en la tabla para exportación. Contacta a Aseguramiento de calidad.");
+                    }
+            
                     //Creamos una nueva aplicación de excel. 
                     Microsoft.Office.Interop.Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
 
@@ -65,7 +67,7 @@ namespace Facturacion
                     Microsoft.Office.Interop.Excel.Range aRange = sheetExportacion.get_Range("A7", "E" + ultimaCelda);
                     aRange.Rows.AutoFit();
                      * */
-                    string rutaPDF = System.Windows.Forms.Application.StartupPath + "\\ultimoReporte.pdf";
+                 /*   string rutaPDF = System.Windows.Forms.Application.StartupPath + "\\ultimoReporte.pdf";
                     //MessageBox.Show("Guardado en " + rutaPDF); 
                     xlWorkSheet.ExportAsFixedFormat(
                     Microsoft.Office.Interop.Excel.XlFixedFormatType.xlTypePDF,
@@ -79,8 +81,8 @@ namespace Facturacion
                     xlApp.WindowState = Microsoft.Office.Interop.Excel.XlWindowState.xlMaximized;
                     xlApp.Visible = true;
                     xlApp.DisplayAlerts = true;
-                    xlWorkBook.WindowDeactivate += cerrarExcel;
-                }
+                    xlWorkBook.WindowDeactivate += cerrarExcel;*/
+                
             }
             catch (Exception e)
             {
