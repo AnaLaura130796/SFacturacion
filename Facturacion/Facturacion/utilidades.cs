@@ -15,7 +15,7 @@ namespace Facturacion
 
     class utilidades
     {
-        
+
         public static void mostrarMensajeValidacion(string mensaje)
         {
             MessageBox.Show(mensaje,
@@ -24,65 +24,57 @@ namespace Facturacion
             MessageBoxIcon.Error,
             MessageBoxDefaultButton.Button1);
         }
-        internal static void exportarTablaExcel(DataTable tabla, string encabezado)
+        internal static void exportarTablaExcel(DataTable tabla)
         {
 
             try
             {
-              
-                    if (tabla == null)
-                    {
-                        utilidades.mostrarMensajeValidacion("No se encontró información en la tabla para exportación. Contacta a Aseguramiento de calidad.");
-                    }
-            
-                    //Creamos una nueva aplicación de excel. 
-                    Microsoft.Office.Interop.Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
+                if (tabla == null)
+                {
+                    utilidades.mostrarMensajeValidacion("No se encontró información en la tabla para exportación. Contacta a Aseguramiento de calidad.");
+                }
 
-                    //Abrimos la plantilla de reportes y creamos un nuevo workbook para mostrar ahí el reporte.
-                    Microsoft.Office.Interop.Excel.Workbook xlWorkBook = xlApp.Workbooks.Add();
-                    //Obtenemos todas las hojas de la plantilla 
-                    Microsoft.Office.Interop.Excel.Sheets sheets = xlWorkBook.Worksheets;
+                //Creamos una nueva aplicación de excel. 
+                Microsoft.Office.Interop.Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
+                //Abrimos la plantilla de reportes y creamos un nuevo workbook para mostrar ahí el reporte.
+                Microsoft.Office.Interop.Excel.Workbook xlWorkBook = xlApp.Workbooks.Add();
+                //Obtenemos todas las hojas de la plantilla 
+                Microsoft.Office.Interop.Excel.Sheets sheets = xlWorkBook.Worksheets;
+                //Obtenemos la primera hoja de la plantilla 
+                Microsoft.Office.Interop.Excel.Worksheet xlWorkSheet = xlApp.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
+                //Copiamos la tabla en el portapapeles con el encabezado.
+                utilidades.CopyDataTableToClipboard(tabla, true);
+                //Pegamos nuestra tabla para la generación del reporte. 
+                Microsoft.Office.Interop.Excel.Range CR = xlWorkSheet.Cells[1, 1] as Microsoft.Office.Interop.Excel.Range;
+                CR.Select();
+                xlWorkSheet.Paste();
+                //Colocamos los bordes de las celdas 
+                xlWorkSheet.Range[xlWorkSheet.Cells[1, 1], xlWorkSheet.Cells[tabla.Rows.Count + 1, tabla.Columns.Count]].borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+                xlWorkSheet.Range[xlWorkSheet.Cells[1, 1], xlWorkSheet.Cells[tabla.Rows.Count + 1, tabla.Columns.Count]].borders.Weight = 2d;
+                //Coloreamos los encabezados de las celdas. 
+                xlWorkSheet.Range[xlWorkSheet.Cells[1, 1], xlWorkSheet.Cells[1, tabla.Columns.Count]].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Blue);
+                xlWorkSheet.Range[xlWorkSheet.Cells[1, 1], xlWorkSheet.Cells[1, tabla.Columns.Count]].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.White);
+                //Establecemos los márgenes para la impresión y hacemos autoFit
+                /*tabla.PageSetup.PrintArea = "A1:E" + ultimaCelda;
+                Microsoft.Office.Interop.Excel.Range aRange = sheetExportacion.get_Range("A7", "E" + ultimaCelda);
+                aRange.Rows.AutoFit();
+                 * */
+                /*   string rutaPDF = System.Windows.Forms.Application.StartupPath + "\\ultimoReporte.pdf";
+                   //MessageBox.Show("Guardado en " + rutaPDF); 
+                   xlWorkSheet.ExportAsFixedFormat(
+                   Microsoft.Office.Interop.Excel.XlFixedFormatType.xlTypePDF,
+                   rutaPDF,
+                   Microsoft.Office.Interop.Excel.XlFixedFormatQuality.xlQualityStandard,
+                   true,
+                   false,
+                   Type.Missing,
+                   Type.Missing,
+                   false);
+                   xlApp.WindowState = Microsoft.Office.Interop.Excel.XlWindowState.xlMaximized;
+                   xlApp.Visible = true;
+                   xlApp.DisplayAlerts = true;
+                   xlWorkBook.WindowDeactivate += cerrarExcel;*/
 
-                    //Obtenemos la primera hoja de la plantilla 
-                    Microsoft.Office.Interop.Excel.Worksheet xlWorkSheet = xlApp.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
-
-
-                    //Copiamos la tabla en el portapapeles con el encabezado.
-                    utilidades.CopyDataTableToClipboard(tabla, true);
-
-                    //Pegamos nuestra tabla para la generación del reporte. 
-                    Microsoft.Office.Interop.Excel.Range CR = xlWorkSheet.Cells[1, 1] as Microsoft.Office.Interop.Excel.Range;
-                    CR.Select();
-                    xlWorkSheet.Paste();
-
-                    //Colocamos los bordes de las celdas 
-                    xlWorkSheet.Range[xlWorkSheet.Cells[1, 1], xlWorkSheet.Cells[tabla.Rows.Count + 1, tabla.Columns.Count]].borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
-                    xlWorkSheet.Range[xlWorkSheet.Cells[1, 1], xlWorkSheet.Cells[tabla.Rows.Count + 1, tabla.Columns.Count]].borders.Weight = 2d;
-
-                    //Coloreamos los encabezados de las celdas. 
-                    xlWorkSheet.Range[xlWorkSheet.Cells[1, 1], xlWorkSheet.Cells[1, tabla.Columns.Count]].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Blue);
-                    xlWorkSheet.Range[xlWorkSheet.Cells[1, 1], xlWorkSheet.Cells[1, tabla.Columns.Count]].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.White);
-                    //Establecemos los márgenes para la impresión y hacemos autoFit
-                    /*tabla.PageSetup.PrintArea = "A1:E" + ultimaCelda;
-                    Microsoft.Office.Interop.Excel.Range aRange = sheetExportacion.get_Range("A7", "E" + ultimaCelda);
-                    aRange.Rows.AutoFit();
-                     * */
-                 /*   string rutaPDF = System.Windows.Forms.Application.StartupPath + "\\ultimoReporte.pdf";
-                    //MessageBox.Show("Guardado en " + rutaPDF); 
-                    xlWorkSheet.ExportAsFixedFormat(
-                    Microsoft.Office.Interop.Excel.XlFixedFormatType.xlTypePDF,
-                    rutaPDF,
-                    Microsoft.Office.Interop.Excel.XlFixedFormatQuality.xlQualityStandard,
-                    true,
-                    false,
-                    Type.Missing,
-                    Type.Missing,
-                    false);
-                    xlApp.WindowState = Microsoft.Office.Interop.Excel.XlWindowState.xlMaximized;
-                    xlApp.Visible = true;
-                    xlApp.DisplayAlerts = true;
-                    xlWorkBook.WindowDeactivate += cerrarExcel;*/
-                
             }
             catch (Exception e)
             {
@@ -91,7 +83,7 @@ namespace Facturacion
             }
         }
 
-        
+
         private static void cerrarExcel(Microsoft.Office.Interop.Excel.Window Wn)
         {
             Wn.Application.Quit();
@@ -168,8 +160,5 @@ namespace Facturacion
             Clipboard.SetText(Output.ToString());
         }
 
-
-        
     }
 }
-

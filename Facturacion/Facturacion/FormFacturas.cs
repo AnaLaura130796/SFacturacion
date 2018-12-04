@@ -14,8 +14,10 @@ namespace Facturacion
     public partial class FormFacturas : Form
     {
 
+
         public FormFacturas()
         {
+            
             InitializeComponent();
         }
 
@@ -43,37 +45,134 @@ namespace Facturacion
             }
 
         }
+        
 
         private void buttonLeer_Contenido_Click(object sender, EventArgs e)
         {
 
-            if (DataBase.pathBaseDeDatos == null)
-                return;
-            else
-                facturas.tabla_facturacion();
-
-            /*este boton ejecutará la función que guardará cada uno de los datos del archivo de entrada
-             * ´guardándolos en una variable DataTable que será ejecutada por el DataBase para correr el query
-             * el cuál será empleado después para generar el archivo de salida con un nuevo formato
-             * agregando las columnas vacias que no están en el archivo de entrada.
-            */
-            //esta función copia los datos de la plantilla de entrada.
-            facturas.tabla_facturacion();
-            
-           
-                      
+            leer_tabla();
         }
 
         private void buttonGenera_Excel_Click(object sender, EventArgs e)
         {
-            /*Función que exporta los datos del portapapeles al nuevo excel con el nuevo formato */
-            //lo que no sé es al momento de copiar al portapapeles de igual manera tengo que crear un nuevo query
-      //     utilidades.exportarTablaExcel(tabla, "Facturacion");
-
-
-
-
+            leer_tabla();
+            if (tabla_generada != null)
+            {
+                utilidades.exportarTablaExcel(tabla_facturacion);
+                facturas.generarFactura("Facturas", tabla_generada);
+            }
         }
-        
+        DataTable tabla_generada = new DataTable();
+        DataTable tabla_facturacion;
+        public void leer_tabla( )
+
+        {
+            if (DataBase.pathBaseDeDatos == null)
+            {
+                return ;
+            }
+            else
+            {
+                facturas.tabla_facturacion();
+               // DataTable tabla_generada = new DataTable();
+                string query_select = string.Format("SELECT " +
+                "F1 as InvoiceCreditFlag " +
+                ", F2 as InvoiceDate " +
+                ", F3 as InvoiceNo " +
+                ", F4 as PoNo_1 " +
+                ", F5 as Currency_1 " +
+                ", '' as BIL " +
+                ", F6 as SapBox " +
+                ", '' as BaselineDate " +
+                ", '' as ShipToCountry_A " +
+                ", '' as ShipFromCountry " +
+                ", F7 as LegalEntity_1 " +
+                ", F8 as LE_Country" +
+                ", F9 as Name_Lab " +
+                ", '' as PGVAT_ID " + 
+                ", F10 as Address_a " +
+                ", F11 as Address1_1 " +
+                ", F12 as City1_1 " +
+                ", F13 as PostalCode_A " +
+                ", F14 as Country_1 " +
+                ", F15 as Vendor_No " +
+                ", F16 as Name_Vendor " +
+                ", ''  as PartnerVAT " +
+                ", F17 as Address1_2" +
+                ", F18 as Address2 " +
+                ", F19 as City1_2 " +
+                ", F20 as Country_2 " +
+                ", '' as BankCountryKey " +
+                ", '' as BankAccountNo " +
+                ", '' as RemitTo_No " +
+                ", '' as Name " +
+                ", '' as Address_b " +
+                ", '' as Address1_3 " +
+                ", '' as City1_3 " +
+                ", '' as PostalCode_B " +
+                ", '' as Country_3 " +
+                ", '' as ProfitCenter " +
+                ", '' as WbsElement " +
+                ", '' as customeServiceOrder " +
+                ", '' as Gobal_Bussinerss_Area " +
+                ", '' as PaymentMethod " +
+                ", '' as PaymentMethod_Supplement " +
+                ", '' as item_Text " +
+                ", '' as PartDescription " +
+                ", F21 as LineItemNumber " +
+                ", F22 as Quantity_1 " +
+                ", F23 as UoM " +
+                ", F24 as NetPrice " +
+                ", F25 as LineItemAmount " +
+                ", '' as PoNo_2 " +
+                ", F26 as MaterialNumber " +
+                ", '' as TaxID_A " +
+                ", '' as TaxAmount_1 " +
+                ", '' as TaxRate_a " +
+                ", '' as UnplannedDeliveryCost " +
+                ", '' as ISR_No " +
+                ", '' as ISR_Ref_No " +
+                ", '' as ScbIndicator " +
+                ", '' as WithHoldingTax " +
+                ", '' as NetAmount " +
+                ", F27 as InvoiceAmount " +
+                ", '' as TaxID_B " +
+                ", '' as TaxType " +
+                ", F28 as TaxAmount_2 " +
+                ", F29 as TaxRate_b " +
+                ", '' as AllowanceAmount " +
+                ", '' as AllowanceDescription " +
+                ", '' as AllowanceCode " +
+                ", '' as ChargesAmount " +
+                ", '' as ChargesDescription " +
+                ", '' as ChargesCode " +
+                ", F30 as InvoiceType " +
+                ", '' as ShipToName " +
+                ", '' as ShipToAddress " +
+                ", '' as ShipToState " +
+                ", '' as ShipToCity1 " +
+                ", '' as ShipToPostalCode " +
+                ", '' as ShipToCountry_B " +
+                ", '' as TaxId1 " +
+                ", '' as TaxType1 " +
+                ", '' as TaxRate1 " +
+                ", '' as TaxAmount1 " +
+                "FROM  [{0}$]", "hoja_entrada");
+         tabla_facturacion= DataBase.runSelectQuery(query_select);
+            
+            }
+         
+        }
+
+
+
+
+
+
+
+
+      
+
+      
     }
 }
